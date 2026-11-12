@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carlos Eduardo Lescano Morisson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: abertura com nome e números → uma seção por empresa (coluna fixa à esquerda com o contexto, grade de projetos à direita) → competências → contato. Detalhe do projeto em painel de tela cheia. Tema escuro único. */
+:root {
+  --bg: #0c0c0e;
+  --surface: #141417;
+  --surface-2: #1b1b20;
+  --line: #26262d;
+  --text: #f2efe9;
+  --muted: #8d8b94;
+  --soft: #c8c5ce;
+  --accent: #ff6a3d;
+  --tone-therafy: #8cc8f2;
+  --tone-sesi: #4a7bd8;
+  --tone-pessoal: #c2413c;
+  --display: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --ease: cubic-bezier(.2, .7, .1, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { background: var(--bg); color: var(--text); font-family: var(--display); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--accent); color: var(--bg); }
+a { color: inherit; }
+img, video { max-width: 100%; display: block; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 44px); }
+.label { font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+@keyframes rise { from { transform: translateY(16px); opacity: .3; } to { transform: none; opacity: 1; } }
+.rise { animation: rise .9s var(--ease) both; animation-delay: calc(var(--i, 0) * 70ms); }
+
+/* Navegação */
+.nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid transparent; transition: border-color .3s; }
+.nav.scrolled { border-bottom-color: var(--line); }
+.nav .wrap { display: flex; justify-content: space-between; align-items: center; height: 64px; gap: 20px; }
+.brand { font-weight: 700; font-size: 15px; text-decoration: none; }
+.brand span { color: var(--muted); font-weight: 400; }
+.nav-right { display: flex; align-items: center; gap: 28px; }
+.nav-links { display: flex; gap: 24px; }
+.nav-links a { text-decoration: none; font-size: 14px; color: var(--muted); transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
+.lang { display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.lang button { background: none; border: 0; cursor: pointer; font-family: var(--mono); font-size: 11px; padding: 5px 9px; border-radius: 999px; color: var(--muted); transition: color .2s, background .2s; }
+.lang button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.lang button:hover:not([aria-pressed="true"]) { color: var(--text); }
+
+/* Abertura */
+.hero { position: relative; overflow: hidden; }
+.hero .wrap { position: relative; padding-top: clamp(56px, 9vw, 112px); padding-bottom: clamp(44px, 6vw, 72px); }
+.role { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; flex-wrap: wrap; }
+.hero h1 { font-size: clamp(36px, 5.2vw, 68px); line-height: 1; margin: 0; max-width: 16ch; text-wrap: balance; }
+.hero h1 .line { display: inline-block; overflow: hidden; padding-bottom: .06em; }
+.hero h1 .line > span { display: inline-block; animation: lineup 1.1s var(--ease) both; animation-delay: calc(var(--i) * 120ms); }
+@keyframes lineup { from { transform: translateY(45%); opacity: .2; } to { transform: none; opacity: 1; } }
+.hero-foot { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 72px); margin-top: clamp(36px, 5vw, 60px); align-items: end; }
+.hero-foot p { margin: 0; max-width: 52ch; font-size: clamp(17px, 1.6vw, 20px); color: var(--soft); }
+.index { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
+.index a { text-decoration: none; padding: 16px 14px 0 0; display: grid; gap: 4px; transition: color .2s; }
+.index b { font-weight: 700; font-size: clamp(30px, 3.6vw, 46px); line-height: 1; font-variant-numeric: tabular-nums; }
+.index small { font-size: 13px; color: var(--muted); line-height: 1.35; transition: color .2s; }
+.index a:hover small { color: var(--text); }
+
+/* Seções de experiência */
+.group { border-top: 1px solid var(--line); padding: clamp(56px, 8vw, 104px) 0; }
+.group .wrap { display: grid; grid-template-columns: minmax(240px, 4fr) 9fr; gap: clamp(28px, 5vw, 72px); }
+.g-side { position: sticky; top: 96px; align-self: start; }
+.g-side .label { display: flex; align-items: center; gap: 10px; }
+.g-side h2 { font-size: clamp(32px, 3.6vw, 48px); line-height: 1.02; margin: 14px 0 0; text-wrap: balance; }
+.g-side h2 .period { display: block; color: var(--muted); font-weight: 500; font-size: .5em; margin-top: 8px; letter-spacing: 0; }
+.g-side p { color: var(--soft); margin: 18px 0 0; max-width: 40ch; font-size: 16px; }
+.g-side .count { margin-top: 22px; }
+
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 22px; }
+.card { display: block; text-decoration: none; }
+.media { position: relative; aspect-ratio: 16 / 11; border-radius: 6px; overflow: hidden; background: var(--surface); }
+.media > img, .media > .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
+.card:hover .media > img, .card:hover .media > .cover { transform: scale(1.035); }
+
+/* Capa tipográfica enquanto não há imagens */
+.cover {
+  display: flex; flex-direction: column; justify-content: space-between; padding: clamp(14px, 2vw, 22px);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+}
+.cover .plat { display: flex; gap: 6px; flex-wrap: wrap; }
+.cover .plat span { font-size: 11px; font-weight: 500; letter-spacing: .04em; padding: 3px 8px; border-radius: 3px; border: 1px solid var(--line); color: var(--muted); }
+.cover .ct { font-weight: 850; text-transform: uppercase; font-size: clamp(30px, 3.4vw, 50px); line-height: .88; letter-spacing: -.025em; max-width: 9ch; color: var(--text); transition: transform .7s var(--ease); }
+.card:hover .cover .ct { transform: translateY(-4px); }
+
+.card-info { padding-top: 14px; display: grid; gap: 4px; }
+.card-info .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.card h3 { font-weight: 650; font-size: 22px; line-height: 1.2; margin: 0; letter-spacing: -.01em; }
+.card h3 .arrow { display: inline-block; color: var(--accent); margin-left: 6px; opacity: 0; transform: translateX(-6px); transition: opacity .25s, transform .35s var(--ease); }
+.card:hover h3 .arrow { opacity: 1; transform: none; }
+.card p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.mtypes { display: flex; gap: 12px; flex: none; }
+.mtypes span { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.mtypes svg { width: 11px; height: 11px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 2px; }
+
+/* Competências */
+.skills-sec { border-top: 1px solid var(--line); padding: clamp(56px, 8vw, 104px) 0; }
+.skills-sec .wrap { display: grid; grid-template-columns: minmax(240px, 4fr) 9fr; gap: clamp(28px, 5vw, 72px); }
+.skills-sec h2 { font-weight: 800; font-size: clamp(38px, 4.6vw, 64px); line-height: .95; letter-spacing: -.03em; margin: 14px 0 0; }
+.skill-list { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); }
+.skill { padding: 22px 24px 22px 0; border-bottom: 1px solid var(--line); }
+.skill:nth-child(odd) { border-right: 1px solid var(--line); }
+.skill:nth-child(even) { padding-left: 24px; }
+.skill h3 { margin: 0 0 6px; font-size: 19px; font-weight: 650; }
+.skill p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* Contato */
+.contact { border-top: 1px solid var(--line); padding: clamp(48px, 7vw, 88px) 0; }
+.contact-row { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 28px; margin-top: 20px; }
+.mail { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; font-size: clamp(20px, 2.6vw, 30px); border-bottom: 1px solid var(--line); padding-bottom: 8px; transition: border-color .25s, color .25s; }
+.mail:hover { border-color: var(--text); }
+.socials { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill { text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 10px 18px; font-size: 15px; transition: background .2s, color .2s, border-color .2s; }
+.pill:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+footer { border-top: 1px solid var(--line); padding: 26px 0 40px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* Detalhe */
+dialog { width: 100%; max-width: 100%; height: 100%; max-height: 100%; margin: 0; padding: 0; border: 0; background: var(--bg); color: var(--text); overflow-y: auto; overscroll-behavior: contain; }
+dialog[open] { animation: panel .6s var(--ease); }
+@keyframes panel { from { transform: translateY(32px); opacity: 0; } to { transform: none; opacity: 1; } }
+dialog::backdrop { background: rgba(0,0,0,.6); }
+.d-top { position: sticky; top: 0; z-index: 3; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.d-top .wrap { display: flex; justify-content: space-between; align-items: center; height: 62px; gap: 16px; }
+.d-nav { display: flex; gap: 8px; }
+.icon-btn { display: inline-flex; align-items: center; gap: 8px; background: none; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; font-size: 14px; transition: background .2s, color .2s, border-color .2s; }
+.icon-btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.d-head { padding: clamp(36px, 6vw, 68px) 0 30px; }
+.d-head h3 { font-weight: 850; text-transform: uppercase; font-size: clamp(46px, 9vw, 124px); line-height: .86; letter-spacing: -.03em; margin: 14px 0 0; }
+
+.stage { position: relative; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: #000; }
+.stage > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: fade .45s ease; }
+.stage video { object-fit: contain; }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.stage .cover .ct { font-size: clamp(40px, 7vw, 96px); max-width: 10ch; }
+.ph-video { display: grid; place-items: center; background: var(--surface); }
+.ph-video div { display: grid; justify-items: center; gap: 14px; }
+.ph-video .play { width: 76px; height: 76px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); display: grid; place-items: center; }
+.thumbs { display: flex; gap: 10px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
+.thumbs button { position: relative; flex: 0 0 clamp(120px, 15vw, 172px); aspect-ratio: 16 / 10; padding: 0; border: 0; border-radius: 4px; overflow: hidden; cursor: pointer; background: var(--surface); opacity: .55; transition: opacity .25s; }
+.thumbs button:hover, .thumbs button[aria-current="true"] { opacity: 1; }
+.thumbs button[aria-current="true"]::after { content: ""; position: absolute; inset: 0; border: 2px solid var(--text); border-radius: 4px; }
+.thumbs button > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.thumbs .cover { padding: 10px; }
+.thumbs .cover .ct { font-size: 15px; }
+.thumbs .cover .plat { display: none; }
+.thumbs .vt { display: grid; place-items: center; background: var(--surface-2); font-family: var(--mono); font-size: 11px; }
+.d-body { display: grid; grid-template-columns: 7fr 4fr; gap: clamp(32px, 6vw, 88px); padding: clamp(40px, 6vw, 72px) 0 clamp(56px, 8vw, 96px); }
+.d-body h4 { font-family: var(--mono); font-weight: 400; font-size: 12px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+.lead { font-size: clamp(19px, 2vw, 23px); line-height: 1.5; margin: 0 0 40px; max-width: 58ch; }
+.hl { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.hl li { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.facts { margin: 0; border-top: 1px solid var(--line); }
+.facts div { display: grid; grid-template-columns: 116px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; }
+.d-links { display: grid; gap: 10px; margin-top: 24px; }
+.btn { display: inline-flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; font-size: 15px; font-weight: 600; padding: 13px 20px; border-radius: 999px; background: var(--text); color: var(--bg); transition: background .2s; }
+.btn:hover { background: var(--soft); }
+.btn.off { background: none; color: var(--muted); border: 1px dashed var(--line); font-weight: 500; cursor: default; }
+.note { font-size: 14px; color: var(--muted); }
+
+/* Uma única tipografia para todos os nomes (seu nome, empresas, projetos, seções) */
+.hero h1, .g-side h2, .skills-sec h2, .cover .ct, .card h3, .d-head h3 {
+  font-family: var(--display); font-weight: 600; font-variation-settings: normal;
+  letter-spacing: -.015em; text-transform: none; color: var(--text);
+}
+.cover .ct { line-height: .95; max-width: 11ch; }
+.d-head h3 { line-height: .95; font-size: clamp(40px, 6.5vw, 88px); }
+.skills-sec h2 { font-size: clamp(32px, 3.6vw, 48px); line-height: 1.02; }
+/* Cor de cada empresa nos títulos */
+.g-side h2 .gname, .card h3, .cover .ct, .d-head h3 { color: var(--tone); }
+
+@media (max-width: 960px) {
+  .group .wrap, .skills-sec .wrap { grid-template-columns: 1fr; }
+  .g-side { position: static; }
+}
+@media (max-width: 760px) {
+  .nav-links { display: none; }
+  .hero-foot, .d-body { grid-template-columns: 1fr; }
+  .index { grid-template-columns: repeat(2, 1fr); }
+  .index a { padding-bottom: 14px; }
+  .grid, .skill-list { grid-template-columns: 1fr; }
+  .skill:nth-child(odd) { border-right: 0; }
+  .skill:nth-child(even) { padding-left: 0; }
+  .facts div { grid-template-columns: 100px 1fr; }
+}
+@media (max-width: 420px) { .d-nav .txt { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav" aria-label="Principal">
+  <div class="wrap">
+    <a class="brand" href="#">Carlos Morisson <span>· Game Developer</span></a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#therafy">Therafy</a>
+        <a href="#sesi">SESI</a>
+        <a href="#pessoais" data-i18n="navPersonal"></a>
+        <a href="#competencias" data-i18n="navSkills"></a>
+        <a href="#contato" data-i18n="navContact"></a>
+      </div>
+      <div class="lang" role="group" aria-label="Idioma / Language / Idioma">
+        <button type="button" data-lang="pt">PT</button>
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="es">ES</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="role label rise"><span data-i18n="role"></span></div>
+    <h1>
+      <span class="line"><span style="--i:0">Carlos Eduardo</span></span>
+      <span class="line"><span style="--i:1">Lescano Morisson</span></span>
+    </h1>
+    <div class="hero-foot">
+      <p class="rise" style="--i:3" data-i18n="intro"></p>
+      <div class="index rise" style="--i:4" id="index"></div>
+    </div>
+  </div>
+</header>
+
+<main id="groups"></main>
+
+<section class="skills-sec" id="competencias">
+  <div class="wrap">
+    <div><div class="label" data-i18n="skillsEyebrow"></div><h2 data-i18n="skillsTitle"></h2></div>
+    <div class="skill-list" id="skills"></div>
+  </div>
+</section>
+
+<section class="contact" id="contato">
+  <div class="wrap">
+    <div class="label" data-i18n="navContact"></div>
+    <div class="contact-row">
+      <a class="mail" href="mailto:seuemail@exemplo.com">seuemail@exemplo.com
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15L15 5M7 5h8v8" stroke="currentColor" stroke-width="1.6"/></svg></a>
+      <div class="socials">
+        <a class="pill" href="https://caarlera.itch.io" target="_blank" rel="noopener">itch.io</a>
+        <a class="pill" href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="pill" href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap label"><span>© <span id="yr"></span> Carlos Eduardo Lescano Morisson</span><span>Unity · C# · VR</span></div></footer>
+
+<dialog id="detail" aria-labelledby="d-title">
+  <div class="d-top"><div class="wrap">
+    <button class="icon-btn" type="button" id="d-close"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5"/></svg><span data-i18n="close"></span></button>
+    <div class="d-nav">
+      <button class="icon-btn" type="button" id="d-prev"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5"/></svg><span class="txt" data-i18n="prev"></span></button>
+      <button class="icon-btn" type="button" id="d-next"><span class="txt" data-i18n="next"></span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5"/></svg></button>
+    </div>
+  </div></div>
+  <div class="wrap">
+    <div class="d-head"><div class="label" id="d-kind"></div><h3 id="d-title"></h3></div>
+    <div class="stage" id="d-stage"></div>
+    <div class="thumbs" id="d-thumbs"></div>
+    <div class="d-body">
+      <div>
+        <h4 data-i18n="hAbout"></h4>
+        <p class="lead" id="d-desc"></p>
+        <h4 data-i18n="hHigh"></h4>
+        <ul class="hl" id="d-hl"></ul>
+      </div>
+      <aside>
+        <h4 data-i18n="hFacts"></h4>
+        <dl class="facts" id="d-facts"></dl>
+        <div class="d-links" id="d-links"></div>
+      </aside>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ============================================================
+   TEXTOS DA INTERFACE
+   ============================================================ */
+const UI = {
+  pt: {
+    navPersonal: "Pessoais", navSkills: "Competências", navContact: "Contato",
+    role: "Desenvolvedor de jogos · Unity · Realidade virtual",
+    intro: "Desenvolvo jogos em Unity para terapia, treinamento industrial e entretenimento, com experiência em realidade virtual, hand tracking e IA conversacional em tempo real.",
+    ixProjects: "projetos no portfólio", ixVR: "projetos em realidade virtual", ixSesi: "anos no SESI", ixNow: "onde trabalho hoje",
+    projects: "projetos", view: "Ver projeto",
+    mVideo: "Vídeo", mImages: "Imagens", mLink: "Jogável",
+    imgSoon: "Imagens em breve", videoSoon: "Vídeo em breve", video: "Vídeo",
+    skillsEyebrow: "Currículo", skillsTitle: "Competências",
+    contactTitle: "Vamos criar algo juntos?",
+    close: "Fechar", prev: "Anterior", next: "Próximo",
+    hAbout: "Sobre o projeto", hHigh: "Destaques", hFacts: "Ficha técnica",
+    fWhere: "Contexto", fPlat: "Plataforma", fEngine: "Engine", fMedia: "Mídia", fTheme: "Tema da jam",
+    play: "Acessar o jogo", linkSoon: "Link em breve",
+    jam: "Game jam", personal: "Projeto pessoal", commercial: "Comercial",
+    plat: { vr: "VR", web: "Web", mobile: "Mobile", pc: "PC" }
+  },
+  en: {
+    navPersonal: "Personal", navSkills: "Skills", navContact: "Contact",
+    role: "Game developer · Unity · Virtual reality",
+    intro: "I build Unity games for therapy, industrial training and entertainment, with hands-on experience in virtual reality, hand tracking and real-time conversational AI.",
+    ixProjects: "projects in this portfolio", ixVR: "virtual reality projects", ixSesi: "years at SESI", ixNow: "where I work today",
+    projects: "projects", view: "View project",
+    mVideo: "Video", mImages: "Images", mLink: "Playable",
+    imgSoon: "Images coming soon", videoSoon: "Video coming soon", video: "Video",
+    skillsEyebrow: "Résumé", skillsTitle: "Skills",
+    contactTitle: "Let's build something together?",
+    close: "Close", prev: "Previous", next: "Next",
+    hAbout: "About the project", hHigh: "Highlights", hFacts: "Details",
+    fWhere: "Context", fPlat: "Platform", fEngine: "Engine", fMedia: "Media", fTheme: "Jam theme",
+    play: "Play the game", linkSoon: "Link coming soon",
+    jam: "Game jam", personal: "Personal project", commercial: "Commercial",
+    plat: { vr: "VR", web: "Web", mobile: "Mobile", pc: "PC" }
+  },
+  es: {
+    navPersonal: "Personales", navSkills: "Habilidades", navContact: "Contacto",
+    role: "Desarrollador de videojuegos · Unity · Realidad virtual",
+    intro: "Desarrollo videojuegos en Unity para terapia, capacitación industrial y entretenimiento, con experiencia en realidad virtual, hand tracking e IA conversacional en tiempo real.",
+    ixProjects: "proyectos en el portafolio", ixVR: "proyectos de realidad virtual", ixSesi: "años en SESI", ixNow: "donde trabajo hoy",
+    projects: "proyectos", view: "Ver proyecto",
+    mVideo: "Video", mImages: "Imágenes", mLink: "Jugable",
+    imgSoon: "Imágenes próximamente", videoSoon: "Video próximamente", video: "Video",
+    skillsEyebrow: "Currículum", skillsTitle: "Habilidades",
+    contactTitle: "¿Creamos algo juntos?",
+    close: "Cerrar", prev: "Anterior", next: "Siguiente",
+    hAbout: "Sobre el proyecto", hHigh: "Destacados", hFacts: "Ficha técnica",
+    fWhere: "Contexto", fPlat: "Plataforma", fEngine: "Motor", fMedia: "Medios", fTheme: "Tema de la jam",
+    play: "Jugar", linkSoon: "Enlace próximamente",
+    jam: "Game jam", personal: "Proyecto personal", commercial: "Comercial",
+    plat: { vr: "VR", web: "Web", mobile: "Móvil", pc: "PC" }
+  }
+};
+
+/* ============================================================
+   EXPERIÊNCIA (uma seção por empresa)
+   ============================================================ */
+const GROUPS = [
+  { id: "therafy", tone: "var(--tone-therafy)", name: { pt: "Therafy", en: "Therafy", es: "Therafy" },
+    period: { pt: "Hoje em dia", en: "Present", es: "Actualmente" },
+    eyebrow: { pt: "Experiência", en: "Experience", es: "Experiencia" },
+    desc: { pt: "A Therafy desenvolve jogos usados como ferramenta de intervenção em terapias. Lá eu crio jogos com IA conversacional em tempo real, minijogos de coordenação motora e experiências em VR, sempre gerando dados para o profissional conduzir a sessão.",
+            en: "Therafy develops games used as intervention tools in therapy. There I build games with real-time conversational AI, motor coordination minigames and VR experiences, all generating data that helps the professional guide each session.",
+            es: "Therafy desarrolla juegos usados como herramienta de intervención en terapias. Allí creo juegos con IA conversacional en tiempo real, minijuegos de coordinación motora y experiencias en VR, siempre generando datos para que el profesional guíe la sesión." } },
+  { id: "sesi", tone: "var(--tone-sesi)", name: { pt: "SESI", en: "SESI", es: "SESI" },
+    period: { pt: "4 anos", en: "4 years", es: "4 años" },
+    eyebrow: { pt: "Experiência", en: "Experience", es: "Experiencia" },
+    desc: { pt: "O SESI (Serviço Social da Indústria) atua na saúde, segurança e educação dos trabalhadores da indústria. Lá desenvolvi jogos de simulação e treinamento para esses trabalhadores, com foco em segurança do trabalho, normas regulamentadoras e saúde.",
+            en: "SESI (Brazil's Industry Social Service) works on the health, safety and education of industrial workers. There I built simulation and training games for those workers, focused on workplace safety, regulatory standards and health.",
+            es: "El SESI (Servicio Social de la Industria de Brasil) trabaja en la salud, la seguridad y la educación de los trabajadores de la industria. Allí desarrollé juegos de simulación y capacitación para esos trabajadores, con foco en seguridad laboral, normas regulatorias y salud." } },
+  { id: "pessoais", tone: "var(--tone-pessoal)", name: { pt: "Projetos pessoais e game jams", en: "Personal projects and game jams", es: "Proyectos personales y game jams" },
+    period: null,
+    eyebrow: { pt: "Autoral", en: "Own work", es: "Obra propia" },
+    desc: { pt: "Um jogo comercial em VR, experimentos com hand tracking e jogos criados em game jams, onde exploro mecânicas novas em prazos curtos.",
+            en: "A commercial VR game, hand tracking experiments and games made at game jams, where I explore new mechanics under tight deadlines.",
+            es: "Un juego comercial en VR, experimentos con hand tracking y juegos creados en game jams, donde exploro mecánicas nuevas en plazos cortos." } }
+];
+
+/* ============================================================
+   PROJETOS
+   media: quais mídias o projeto terá (link, imagens, vídeo)
+   url: link do jogo · images: ["img/arquivo.jpg"] · video: "video/arquivo.mp4"
+   ============================================================ */
+const PROJECTS = [
+  /* ---------- Therafy ---------- */
+  { id: "thera-social", group: "therafy", title: "Thera-Social", plat: [],
+    media: { link: true, images: true, video: true }, url: "https://www.meta.com/pt-br/experiences/thera-social/24569822479296812/", images: ["img/thera-social/1", "img/thera-social/2", "img/thera-social/3"], video: "video/thera-social.mp4",
+    genre: { pt: "Terapia · IA conversacional", en: "Therapy · Conversational AI", es: "Terapia · IA conversacional" },
+    summary: { pt: "Conversas em tempo real com uma IA que interpreta personagens em diferentes contextos sociais.", en: "Real-time conversations with an AI that plays characters in different social situations.", es: "Conversaciones en tiempo real con una IA que interpreta personajes en distintos contextos sociales." },
+    desc: { pt: "Jogo para uso em terapia em que o jogador conversa em tempo real com uma IA. Ela interpreta vários personagens em contextos diferentes, e o jogo extrai dados qualitativos da sessão para que o profissional interprete e direcione a intervenção.",
+            en: "A therapy game in which the player talks in real time with an AI. It plays several characters in different contexts, and the game extracts qualitative data from the session so the professional can interpret it and guide the intervention.",
+            es: "Juego para uso en terapia en el que el jugador conversa en tiempo real con una IA. Ella interpreta varios personajes en distintos contextos, y el juego extrae datos cualitativos de la sesión para que el profesional los interprete y oriente la intervención." },
+    hl: { pt: ["Diálogo com IA em tempo real", "Personagens e contextos variados", "Dados qualitativos para o terapeuta"], en: ["Real-time AI dialogue", "Varied characters and contexts", "Qualitative data for the therapist"], es: ["Diálogo con IA en tiempo real", "Personajes y contextos variados", "Datos cualitativos para el terapeuta"] } },
+  { id: "theracria", group: "therafy", title: "TheraCria", plat: ["vr"],
+    media: { link: true, images: true, video: true }, url: "https://www.meta.com/pt-br/experiences/thera-create/35040737318842944/", images: ["img/theracria/1", "img/theracria/2", "img/theracria/3"], video: "video/theracria.mp4",
+    genre: { pt: "Terapia · Pintura em VR", en: "Therapy · VR painting", es: "Terapia · Pintura en VR" },
+    summary: { pt: "Pintura livre em realidade virtual, com desafios opcionais.", en: "Free painting in virtual reality, with optional challenges.", es: "Pintura libre en realidad virtual, con desafíos opcionales." },
+    desc: { pt: "Em realidade virtual, o jogador pinta em um quadro e pode cumprir desafios ou simplesmente pintar livremente, como uma atividade para deixar a mente livre.",
+            en: "In virtual reality, the player paints on a canvas and can take on challenges or simply paint freely, as an activity to let the mind wander.",
+            es: "En realidad virtual, el jugador pinta en un lienzo y puede cumplir desafíos o simplemente pintar libremente, como una actividad para liberar la mente." },
+    hl: { pt: ["Pintura em VR", "Desafios criativos", "Atividade de relaxamento"], en: ["VR painting", "Creative challenges", "Relaxing activity"], es: ["Pintura en VR", "Desafíos creativos", "Actividad de relajación"] } },
+
+  /* ---------- SESI ---------- */
+  { id: "eucalipto", group: "sesi", title: { pt: "Plantio de Eucalipto", en: "Eucalyptus Planting", es: "Plantación de Eucalipto" }, plat: ["vr"],
+    media: { link: false, images: true, video: false }, url: "", images: ["img/eucalipto/1", "img/eucalipto/2", "img/eucalipto/3", "img/eucalipto/4"], video: "",
+    genre: { pt: "Treinamento industrial", en: "Industrial training", es: "Capacitación industrial" },
+    summary: { pt: "Treino do método de plantio e do uso correto da ferramenta.", en: "Training the planting method and correct tool handling.", es: "Entrenamiento del método de plantación y del uso correcto de la herramienta." },
+    desc: { pt: "Simulador em VR para funcionários da indústria praticarem o método de plantio de eucalipto e o manuseio correto da ferramenta usada no processo.",
+            en: "A VR simulator where industrial workers practice the eucalyptus planting method and the correct handling of the tool used in the process.",
+            es: "Simulador en VR para que los trabajadores de la industria practiquen el método de plantación de eucalipto y el manejo correcto de la herramienta usada en el proceso." },
+    hl: { pt: ["Manuseio de ferramenta em VR", "Passo a passo do método de plantio"], en: ["Tool handling in VR", "Step-by-step planting method"], es: ["Manejo de herramienta en VR", "Paso a paso del método de plantación"] } },
+  { id: "healthcare-heroes", group: "sesi", title: "Healthcare Heroes", plat: ["pc"],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/healthcare-heroes/1", "img/healthcare-heroes/2", "img/healthcare-heroes/3"], video: "video/healthcare-heroes.mp4",
+    genre: { pt: "Survivor", en: "Survivor", es: "Survivor" },
+    summary: { pt: "Um survivor dentro do corpo humano, com médicos reconhecidos enfrentando doenças.", en: "A survivor game inside the human body, with renowned doctors fighting diseases.", es: "Un survivor dentro del cuerpo humano, con médicos reconocidos enfrentando enfermedades." },
+    desc: { pt: "Jogo para PC no estilo survivor que se passa dentro do corpo humano. Os personagens jogáveis são médicos reconhecidos, e os inimigos representam doenças.",
+            en: "A PC survivor-style game set inside the human body. The playable characters are renowned doctors, and the enemies represent diseases.",
+            es: "Juego para PC estilo survivor ambientado dentro del cuerpo humano. Los personajes jugables son médicos reconocidos y los enemigos representan enfermedades." },
+    hl: { pt: ["Gênero survivor", "Médicos reconhecidos como personagens", "Inimigos que representam doenças"], en: ["Survivor genre", "Renowned doctors as playable characters", "Enemies that represent diseases"], es: ["Género survivor", "Médicos reconocidos como personajes", "Enemigos que representan enfermedades"] } },
+  { id: "salve-o-hospital", group: "sesi", title: { pt: "Salve o Hospital", en: "Save the Hospital", es: "Salva el Hospital" }, plat: ["pc", "mobile"],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/salve-o-hospital/1", "img/salve-o-hospital/2"], video: "video/salve-o-hospital.mp4",
+    genre: { pt: "Minigames · Saúde", en: "Minigames · Health", es: "Minijuegos · Salud" },
+    summary: { pt: "Minigames que simulam procedimentos padrão de um hospital.", en: "Minigames that simulate standard hospital procedures.", es: "Minijuegos que simulan procedimientos estándar de un hospital." },
+    desc: { pt: "Jogo para PC e celular ambientado em um hospital, formado por vários minigames que simulam procedimentos hospitalares padrão.",
+            en: "A PC and mobile game set in a hospital, made up of several minigames that simulate standard hospital procedures.",
+            es: "Juego para PC y móvil ambientado en un hospital, compuesto por varios minijuegos que simulan procedimientos hospitalarios estándar." },
+    hl: { pt: ["Vários minigames", "Procedimentos hospitalares padrão"], en: ["Multiple minigames", "Standard hospital procedures"], es: ["Varios minijuegos", "Procedimientos hospitalarios estándar"] } },
+  { id: "nadando-na-gruta", group: "sesi", title: { pt: "Nadando na Gruta", en: "Cave Swim", es: "Nadando en la Gruta" }, plat: ["vr"],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/nadando-na-gruta/1", "img/nadando-na-gruta/2", "img/nadando-na-gruta/3"], video: "video/nadando-na-gruta.mp4",
+    genre: { pt: "Experiência para eventos", en: "Event experience", es: "Experiencia para eventos" },
+    summary: { pt: "Primeiro contato com VR: nadar em uma gruta usando as próprias mãos.", en: "A first taste of VR: swimming through a cave with your own hands.", es: "Primer contacto con VR: nadar en una gruta usando las propias manos." },
+    desc: { pt: "Experiência em VR criada para eventos, para apresentar a realidade virtual ao público. O jogador nada por uma pequena gruta fazendo o movimento real de nado, reconhecido por hand tracking.",
+            en: "A VR experience made for events, to introduce the public to virtual reality. The player swims through a small cave by making real swimming motions, recognized through hand tracking.",
+            es: "Experiencia en VR creada para eventos, para presentar la realidad virtual al público. El jugador nada por una pequeña gruta haciendo el movimiento real de nado, reconocido mediante hand tracking." },
+    hl: { pt: ["Hand tracking", "Movimento natural de nado", "Pensado para quem nunca usou VR"], en: ["Hand tracking", "Natural swimming motion", "Designed for first-time VR users"], es: ["Hand tracking", "Movimiento natural de nado", "Pensado para quien nunca usó VR"] } },
+  { id: "ambiente-frio", group: "sesi", title: { pt: "Trabalho em Ambiente Frio", en: "Cold Environment Work", es: "Trabajo en Ambiente Frío" }, plat: ["vr"],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/ambiente-frio/1", "img/ambiente-frio/2", "img/ambiente-frio/3"], video: "video/ambiente-frio.mp4",
+    genre: { pt: "Segurança do trabalho", en: "Workplace safety", es: "Seguridad laboral" },
+    summary: { pt: "A rotina em ambientes frios, do uso dos EPIs à saída no momento certo.", en: "The cold-environment routine, from wearing PPE to leaving on time.", es: "La rutina en ambientes fríos, del uso de los EPP a la salida en el momento indicado." },
+    desc: { pt: "Simulação em VR do trabalho de colaboradores em ambientes frios. O jogador precisa vestir todos os EPIs, realizar a tarefa e sair do ambiente quando solicitado.",
+            en: "A VR simulation of work in cold environments. The player must put on all the required PPE, carry out the task and leave the area when instructed.",
+            es: "Simulación en VR del trabajo de colaboradores en ambientes fríos. El jugador debe ponerse todos los EPP, realizar la tarea y salir del ambiente cuando se le indique." },
+    hl: { pt: ["Uso correto de EPIs", "Procedimento completo da tarefa"], en: ["Correct use of PPE", "Full task procedure"], es: ["Uso correcto de EPP", "Procedimiento completo de la tarea"] } },
+  { id: "ergonomia", group: "sesi", title: { pt: "Ergonomia", en: "Ergonomics", es: "Ergonomía" }, plat: ["vr"],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/ergonomia/1", "img/ergonomia/2", "img/ergonomia/3"], video: "video/ergonomia.mp4",
+    genre: { pt: "Saúde ocupacional", en: "Occupational health", es: "Salud ocupacional" },
+    summary: { pt: "Um raio-X para encontrar lesões causadas por má postura.", en: "An X-ray to find injuries caused by poor posture.", es: "Un rayo X para encontrar lesiones causadas por mala postura." },
+    desc: { pt: "Treinamento em VR em que o jogador usa um raio-X para encontrar, no ambiente de trabalho, lesões causadas por má postura.",
+            en: "VR training in which the player uses an X-ray to find injuries caused by poor posture in the workplace.",
+            es: "Capacitación en VR en la que el jugador usa un rayo X para encontrar, en el entorno laboral, lesiones causadas por mala postura." },
+    hl: { pt: ["Mecânica de raio-X", "Conscientização sobre postura"], en: ["X-ray mechanic", "Posture awareness"], es: ["Mecánica de rayo X", "Concientización sobre la postura"] } },
+  { id: "decisopolis", group: "sesi", title: "Decisópolis", plat: ["web"],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/decisopolis/1", "img/decisopolis/2", "img/decisopolis/3"], video: "video/decisopolis.mp4",
+    genre: { pt: "Visual novel", en: "Visual novel", es: "Novela visual" },
+    summary: { pt: "Uma pequena novel sobre um robô que quer se tornar humano.", en: "A short novel about a robot that wants to become human.", es: "Una pequeña novela sobre un robot que quiere volverse humano." },
+    desc: { pt: "Novel para web em que o jogador acompanha um robô que quer se tornar humano. A missão do jogador é ensinar a ele conceitos de ética.",
+            en: "A web novel in which the player follows a robot that wants to become human. The player's mission is to teach it about ethics.",
+            es: "Novela web en la que el jugador acompaña a un robot que quiere volverse humano. La misión del jugador es enseñarle conceptos de ética." },
+    hl: { pt: ["Narrativa sobre ética", "Jogo para web"], en: ["Ethics-driven narrative", "Web game"], es: ["Narrativa sobre ética", "Juego web"] } },
+  { id: "nr10", group: "sesi", title: "NR10", plat: ["vr"],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/nr10/1", "img/nr10/2", "img/nr10/3"], video: "video/nr10.mp4",
+    genre: { pt: "Segurança em eletricidade", en: "Electrical safety", es: "Seguridad eléctrica" },
+    summary: { pt: "A troca de um disjuntor com defeito, seguindo a NR10.", en: "Replacing a faulty circuit breaker, following the NR10 standard.", es: "El cambio de un disyuntor defectuoso, siguiendo la NR10." },
+    desc: { pt: "Treinamento em VR que atende aos requisitos da NR10, a norma regulamentadora de segurança em instalações elétricas. O jogador troca um disjuntor com defeito, guiado por contornos (outlines) em cada etapa, cada um com um significado diferente.",
+            en: "VR training that meets the requirements of NR10, Brazil's regulatory standard for electrical safety. The player replaces a faulty circuit breaker, guided by outlines at each step, each with its own meaning.",
+            es: "Capacitación en VR que cumple los requisitos de la NR10, la norma regulatoria brasileña de seguridad en instalaciones eléctricas. El jugador cambia un disyuntor defectuoso, guiado por contornos (outlines) en cada paso, cada uno con un significado distinto." },
+    hl: { pt: ["Conformidade com a NR10", "Sistema de outlines para guiar cada etapa"], en: ["NR10 compliance", "Outline system guiding each step"], es: ["Cumplimiento de la NR10", "Sistema de outlines para guiar cada paso"] } },
+  { id: "carbon-city", group: "sesi", title: "Carbon City", plat: [],
+    media: { link: false, images: true, video: true }, url: "", images: ["img/carbon-city/1", "img/carbon-city/2", "img/carbon-city/3"], video: "video/carbon-city.mp4",
+    genre: { pt: "Educação ambiental", en: "Environmental education", es: "Educación ambiental" },
+    summary: { pt: "Dirija três veículos e veja quanto carbono cada trajeto emite.", en: "Drive three vehicles and see how much carbon each trip emits.", es: "Conduce tres vehículos y descubre cuánto carbono emite cada trayecto." },
+    desc: { pt: "Jogo que calcula a emissão de carbono de cada veículo a partir da distância percorrida e do consumo médio. São três veículos, cada um com uma jogabilidade completamente diferente, e o jogo está disponível em português, inglês e espanhol.",
+            en: "A game that calculates each vehicle's carbon emissions from the distance travelled and its average fuel consumption. There are three vehicles, each with completely different gameplay, and the game is available in Portuguese, English and Spanish.",
+            es: "Juego que calcula la emisión de carbono de cada vehículo a partir de la distancia recorrida y el consumo medio. Hay tres vehículos, cada uno con una jugabilidad completamente distinta, y el juego está disponible en portugués, inglés y español." },
+    hl: { pt: ["Cálculo de emissão por distância e consumo", "Três veículos com gameplays distintas", "Localizado em três idiomas"], en: ["Emissions calculated from distance and consumption", "Three vehicles with distinct gameplay", "Localized in three languages"], es: ["Cálculo de emisiones por distancia y consumo", "Tres vehículos con jugabilidad distinta", "Localizado en tres idiomas"] } },
+
+  /* ---------- Pessoais e game jams ---------- */
+  { id: "retro-punch", group: "pessoais", title: "Retro Punch", plat: ["vr"], kind: "commercial",
+    media: { link: true, images: true, video: true }, url: "https://www.meta.com/pt-br/experiences/retro-punch/1041969071862324/", images: ["img/retro-punch/1", "img/retro-punch/2", "img/retro-punch/3"], video: "video/retro-punch.mp4",
+    genre: { pt: "Ação e ritmo", en: "Action and rhythm", es: "Acción y ritmo" },
+    summary: { pt: "Ação e ritmo em VR, com estética e trilha retrowave.", en: "VR action and rhythm with a retrowave look and sound.", es: "Acción y ritmo en VR, con estética y banda sonora retrowave." },
+    desc: { pt: "Jogo comercial de ação e ritmo em VR, com estética e áudio retrowave e três modos de jogo diferentes.",
+            en: "A commercial VR action and rhythm game with retrowave visuals and audio, featuring three different game modes.",
+            es: "Juego comercial de acción y ritmo en VR, con estética y audio retrowave y tres modos de juego distintos." },
+    hl: { pt: ["Punch: acerte o centro dos cubos com seus golpes", "Push: empurre as esferas até os portais", "Adapt: adapte-se a diferentes ferramentas para acertar os cubos"],
+          en: ["Punch: hit the center of the cubes with your punches", "Push: push the spheres into the portals", "Adapt: switch between different tools to hit the cubes"],
+          es: ["Punch: golpea el centro de los cubos", "Push: empuja las esferas hasta los portales", "Adapt: adáptate a distintas herramientas para golpear los cubos"] } },
+  { id: "corta-cana", group: "pessoais", title: "Corta Cana", plat: ["vr"], kind: "personal",
+    media: { link: true, images: true, video: true }, url: "https://sidequestvr.com/app/40300/corta-cana", images: ["img/corta-cana/1", "img/corta-cana/2", "img/corta-cana/3"], video: "video/corta-cana.mp4",
+    genre: { pt: "Hand tracking", en: "Hand tracking", es: "Hand tracking" },
+    summary: { pt: "Corte canas-de-açúcar com as próprias mãos, sem controles.", en: "Slice sugarcane with your bare hands, no controllers.", es: "Corta cañas de azúcar con tus propias manos, sin controles." },
+    desc: { pt: "Jogo em VR criado para aprofundar o uso de hand tracking e reconhecimento de poses da mão. Canas-de-açúcar vêm em direção ao jogador, que precisa cortá-las.",
+            en: "A VR game built to sharpen my hand tracking and hand pose recognition skills. Sugarcane stalks come at the player, who has to slice them.",
+            es: "Juego en VR creado para profundizar en el uso de hand tracking y reconocimiento de poses de la mano. Las cañas de azúcar van hacia el jugador, que debe cortarlas." },
+    hl: { pt: ["Hand tracking", "Reconhecimento de poses da mão"], en: ["Hand tracking", "Hand pose recognition"], es: ["Hand tracking", "Reconocimiento de poses de la mano"] } },
+  { id: "abubble", group: "pessoais", title: "Abubblé", plat: ["web", "mobile"], kind: "jam",
+    jamTheme: { pt: "Bolhas", en: "Bubbles", es: "Burbujas" },
+    media: { link: true, images: true, video: false }, url: "https://caarlera.itch.io/a-bubbl", images: ["img/abubble/1", "img/abubble/2", "img/abubble/3"], video: "",
+    genre: { pt: "Arcade", en: "Arcade", es: "Arcade" },
+    summary: { pt: "Controle uma horda de bolhas até o chefe final.", en: "Lead a horde of bubbles to the final boss.", es: "Controla una horda de burbujas hasta el jefe final." },
+    desc: { pt: "Criado para uma game jam com o tema \"Bolhas\". Jogo web adaptado para celular em que o jogador controla uma horda de bolhas, desvia de obstáculos e enfrenta um chefe final. O dinheiro ganho compra power-ups para as bolhas.",
+            en: "Made for a game jam with the theme \"Bubbles\". A mobile-friendly web game where the player controls a horde of bubbles, dodges obstacles and faces a final boss. The money earned buys power-ups for the bubbles.",
+            es: "Creado para una game jam con el tema \"Burbujas\". Juego web adaptado a móviles en el que el jugador controla una horda de burbujas, esquiva obstáculos y enfrenta a un jefe final. El dinero ganado compra mejoras para las burbujas." },
+    hl: { pt: ["Bolha dupla: ao ser destruída, vira duas", "Bolha troia: libera uma bolha menor quando é destruída", "Bolha ricochete: rebate nos obstáculos", "Bolha ácida: atravessa os obstáculos"],
+          en: ["Double bubble: splits into two when destroyed", "Trojan bubble: releases a smaller bubble when destroyed", "Ricochet bubble: bounces off obstacles", "Acid bubble: passes through obstacles"],
+          es: ["Burbuja doble: al destruirse se convierte en dos", "Burbuja troyana: libera una burbuja más pequeña al destruirse", "Burbuja rebote: rebota en los obstáculos", "Burbuja ácida: atraviesa los obstáculos"] } },
+  { id: "unhappy", group: "pessoais", title: "UnHappy", plat: ["web"], kind: "jam",
+    jamTheme: { pt: "Faça-me rir", en: "Make me laugh", es: "Hazme reír" },
+    media: { link: true, images: true, video: false }, url: "https://caarlera.itch.io/unhappy", images: ["img/unhappy/1", "img/unhappy/2", "img/unhappy/3"], video: "",
+    genre: { pt: "Plataforma side-scroller", en: "Side-scrolling platformer", es: "Plataformas de desplazamiento lateral" },
+    summary: { pt: "Um homem triste chega à Ilha da Felicidade para deixar todos tristes.", en: "A sad man lands on Happiness Island to make everyone sad.", es: "Un hombre triste llega a la Isla de la Felicidad para entristecer a todos." },
+    desc: { pt: "Criado para uma game jam com o tema \"Faça-me rir\". Plataforma side-scroller para web inspirado em Metal Slug: o jogador controla um homem triste que vai até a Ilha da Felicidade para deixar todos tristes, mas no final acaba feliz.",
+            en: "Made for a game jam with the theme \"Make me laugh\". A Metal Slug-inspired side-scrolling web platformer: the player controls a sad man who travels to Happiness Island to make everyone sad, but ends up happy himself.",
+            es: "Creado para una game jam con el tema \"Hazme reír\". Plataformas de desplazamiento lateral para web inspirado en Metal Slug: el jugador controla a un hombre triste que va a la Isla de la Felicidad para entristecer a todos, pero al final termina feliz." },
+    hl: { pt: ["Inspirado em Metal Slug", "Narrativa com virada no final"], en: ["Inspired by Metal Slug", "Story with a twist ending"], es: ["Inspirado en Metal Slug", "Narrativa con giro final"] } },
+  { id: "green-life", group: "pessoais", title: "Green Life", plat: [], kind: "jam",
+    jamTheme: { pt: "Ciclos", en: "Cycles", es: "Ciclos" },
+    media: { link: true, images: true, video: false }, url: "https://caarlera.itch.io/green-life", images: ["img/green-life/1", "img/green-life/2", "img/green-life/3"], video: "",
+    genre: { pt: "Plataforma 2D", en: "2D platformer", es: "Plataformas 2D" },
+    summary: { pt: "Meu primeiro jogo: uma planta atravessando as estações do ano.", en: "My first game: a plant journeying through the seasons.", es: "Mi primer juego: una planta atravesando las estaciones del año." },
+    desc: { pt: "Criado para uma game jam com o tema \"Ciclos\", foi o meu primeiro jogo. Plataforma 2D side-scroller em que o jogador controla uma planta, e cada fase é uma estação do ano.",
+            en: "Made for a game jam with the theme \"Cycles\", this was my first game. A 2D side-scrolling platformer where the player controls a plant, and each level is a season of the year.",
+            es: "Creado para una game jam con el tema \"Ciclos\", fue mi primer juego. Plataformas 2D de desplazamiento lateral en el que el jugador controla una planta, y cada nivel es una estación del año." },
+    hl: { pt: ["Primeiro jogo desenvolvido", "Fases baseadas nas estações do ano"], en: ["My first game", "Levels based on the seasons"], es: ["Primer juego desarrollado", "Niveles basados en las estaciones del año"] } }
+];
+
+const SKILLS = [
+  { t: { pt: "Unity e C#", en: "Unity and C#", es: "Unity y C#" }, d: { pt: "Engine e linguagem de todos os projetos, do protótipo à entrega.", en: "The engine and language behind every project, from prototype to delivery.", es: "Motor y lenguaje de todos los proyectos, del prototipo a la entrega." } },
+  { t: { pt: "Realidade virtual", en: "Virtual reality", es: "Realidad virtual" }, d: { pt: "Hand tracking, reconhecimento de poses da mão e ambientes em imagens 360°.", en: "Hand tracking, hand pose recognition and 360° image environments.", es: "Hand tracking, reconocimiento de poses de la mano y entornos con imágenes 360°." } },
+  { t: { pt: "IA conversacional", en: "Conversational AI", es: "IA conversacional" }, d: { pt: "Personagens interpretados por IA em tempo real, com cenários e critérios gerados dinamicamente.", en: "Real-time AI-driven characters, with dynamically generated scenarios and criteria.", es: "Personajes interpretados por IA en tiempo real, con escenarios y criterios generados dinámicamente." } },
+  { t: { pt: "Simulação e treinamento", en: "Simulation and training", es: "Simulación y capacitación" }, d: { pt: "Segurança do trabalho, EPIs, ergonomia e normas regulamentadoras como a NR10.", en: "Workplace safety, PPE, ergonomics and regulatory standards such as NR10.", es: "Seguridad laboral, EPP, ergonomía y normas regulatorias como la NR10." } },
+  { t: { pt: "Jogos para terapia", en: "Games for therapy", es: "Juegos para terapia" }, d: { pt: "Dificuldade adaptativa e coleta de dados para apoiar a decisão do profissional.", en: "Adaptive difficulty and data collection to support the professional's decisions.", es: "Dificultad adaptativa y recopilación de datos para apoyar las decisiones del profesional." } },
+  { t: { pt: "Python e SQL Server", en: "Python and SQL Server", es: "Python y SQL Server" }, d: { pt: "Desenvolvimento em Python e trabalho com bancos de dados SQL Server.", en: "Python development and work with SQL Server databases.", es: "Desarrollo en Python y trabajo con bases de datos SQL Server." } },
+  { t: { pt: "Integração com APIs", en: "API integration", es: "Integración con APIs" }, d: { pt: "Comunicação dos jogos com serviços externos, como os modelos de IA usados em tempo real.", en: "Connecting games to external services, such as the AI models used in real time.", es: "Comunicación de los juegos con servicios externos, como los modelos de IA usados en tiempo real." } },
+  { t: { pt: "Multiplataforma e localização", en: "Cross-platform and localization", es: "Multiplataforma y localización" }, d: { pt: "Projetos para VR, PC, web e celular, com localização em português, inglês e espanhol.", en: "Projects for VR, PC, web and mobile, localized in Portuguese, English and Spanish.", es: "Proyectos para VR, PC, web y móvil, localizados en portugués, inglés y español." } }
+];
+
+/* ============================================================
+   IDIOMA
+   ============================================================ */
+const SUPPORTED = ["pt", "en", "es"];
+function detectLang() {
+  try { const s = localStorage.getItem("lang"); if (SUPPORTED.includes(s)) return s; } catch (e) {}
+  for (const l of (navigator.languages || [navigator.language || "en"])) {
+    const b = String(l).slice(0, 2).toLowerCase(); if (SUPPORTED.includes(b)) return b;
+  }
+  return "en";
+}
+let lang = detectLang();
+const t = k => UI[lang][k] ?? UI.en[k];
+const loc = v => (v && typeof v === "object" && !Array.isArray(v)) ? (v[lang] ?? v.en ?? v.pt) : v;
+const groupOf = p => GROUPS.find(g => g.id === p.group);
+
+/* ============================================================
+   COMPONENTES
+   ============================================================ */
+const ICON = {
+  video: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 2l7 4-7 4z" fill="currentColor"/></svg>',
+  images: '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="1" y="2" width="10" height="8" rx="1" stroke="currentColor"/><path d="M1.5 9l3-3 2 2 1.5-1.5L11 9" stroke="currentColor"/></svg>',
+  link: '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 9l6-6M4.5 3H9v4.5" stroke="currentColor" stroke-width="1.2"/></svg>'
+};
+function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+function cover(p, withPlat = true) {
+  const c = el("div", "cover");
+  const plat = el("div", "plat");
+  if (withPlat) p.plat.forEach(k => plat.append(el("span", null, t("plat")[k])));
+  const ct = el("div", "ct"); ct.textContent = loc(p.title);
+  c.append(plat, ct); return c;
+}
+/* Imagens: versão leve (720px) para cards e miniaturas; versão grande (1600px) só no destaque */
+const SM = s => s + "-sm.webp", LG = s => s + ".webp";
+function img(src, alt) { const i = new Image(); i.src = src; i.alt = alt; i.decoding = "async"; return i; }
+function bigImg(base, alt) {
+  const i = img(SM(base), alt);
+  const hi = new Image(); hi.src = LG(base);
+  (hi.decode ? hi.decode() : new Promise(r => hi.onload = r)).then(() => { i.src = hi.src; }).catch(() => {});
+  return i;
+}
+const warmed = new Set();
+function warm(p) { p.images.forEach(b => { if (!warmed.has(b)) { warmed.add(b); new Image().src = LG(b); } }); }
+function mediaTypes(p) {
+  const box = el("div", "mtypes");
+  [["video", "mVideo"], ["images", "mImages"], ["link", "mLink"]].forEach(([k, label]) => {
+    if (p.media[k]) box.append(el("span", null, ICON[k] + t(label)));
+  });
+  return box;
+}
+function storeName(u) {
+  if (/meta\.com|oculus\.com/.test(u)) return "Meta Quest Store";
+  if (/sidequestvr/.test(u)) return "SideQuest";
+  if (/itch\.io/.test(u)) return "itch.io";
+  return t("play");
+}
+function contextLine(p) {
+  if (p.group !== "pessoais") return loc(groupOf(p).name);
+  if (p.kind === "jam") return t("jam");
+  if (p.kind === "commercial") return `${t("personal")} · ${t("commercial")}`;
+  return t("personal");
+}
+
+/* ============================================================
+   RENDERIZAÇÃO
+   ============================================================ */
+function renderIndex() {
+  const box = document.getElementById("index"); box.innerHTML = "";
+  const vr = PROJECTS.filter(p => p.plat.includes("vr")).length;
+  [[PROJECTS.length, "ixProjects", "#therafy"], [vr, "ixVR", "#therafy"]].forEach(([n, k, href]) => {
+    const a = el("a"); a.href = href; a.append(el("b", null, n), el("small", null, t(k))); box.append(a);
+  });
+}
+function renderGroups() {
+  const main = document.getElementById("groups"); main.innerHTML = "";
+  GROUPS.forEach(g => {
+    const items = PROJECTS.filter(p => p.group === g.id);
+    const sec = el("section", "group"); sec.id = g.id; sec.style.setProperty("--tone", g.tone);
+    const wrap = el("div", "wrap");
+    const side = el("div", "g-side");
+    side.innerHTML = `<div class="label"><span></span></div><h2><span class="gname"></span></h2><p></p><div class="label count"></div>`;
+    side.querySelector(".label span").textContent = loc(g.eyebrow);
+    side.querySelector(".gname").textContent = loc(g.name);
+    if (g.period) { const pr = el("span", "period"); pr.textContent = "— " + loc(g.period); side.querySelector("h2").append(pr); }
+    side.querySelector("p").textContent = loc(g.desc);
+    side.querySelector(".count").textContent = `${String(items.length).padStart(2, "0")} ${t("projects")}`;
+    const grid = el("div", "grid");
+    items.forEach(p => {
+      const a = el("a", "card"); a.href = "#" + p.id; a.setAttribute("aria-label", `${t("view")}: ${loc(p.title)}`);
+      const m = el("div", "media"); m.append(p.images[0] ? img(SM(p.images[0]), loc(p.title)) : cover(p));
+      a.addEventListener("pointerenter", () => warm(p), { once: true });
+      a.addEventListener("focus", () => warm(p), { once: true });
+      const info = el("div", "card-info");
+      const tag = el("span", "tag"); tag.textContent = p.group === "pessoais" ? contextLine(p) : loc(p.genre);
+      const row = el("div", "row");
+      const h = el("h3"); h.textContent = loc(p.title); 
+      row.append(h, mediaTypes(p));
+      const d = el("p"); d.textContent = loc(p.summary);
+      info.append(tag, row, d);
+      a.append(m, info); grid.append(a);
+    });
+    wrap.append(side, grid); sec.append(wrap); main.append(sec);
+  });
+}
+function renderSkills() {
+  const box = document.getElementById("skills"); box.innerHTML = "";
+  SKILLS.forEach(s => { const d = el("div", "skill"); d.append(el("h3"), el("p")); d.children[0].textContent = loc(s.t); d.children[1].textContent = loc(s.d); box.append(d); });
+}
+function applyLang() {
+  document.documentElement.lang = { pt: "pt-BR", en: "en", es: "es" }[lang];
+  document.querySelectorAll("[data-i18n]").forEach(e => { e.textContent = t(e.dataset.i18n); });
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+  renderIndex(); renderGroups(); renderSkills();
+  if (detail.open && current) openProject(current, true);
+}
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => {
+  lang = b.dataset.lang; try { localStorage.setItem("lang", lang); } catch (e) {} applyLang();
+}));
+
+/* ============================================================
+   DETALHE
+   ============================================================ */
+const detail = document.getElementById("detail");
+const $ = id => document.getElementById(id);
+let current = null;
+function openProject(p, keep) {
+  current = p; warm(p);
+  const g = groupOf(p);
+  detail.style.setProperty("--tone", g.tone);
+  $("d-kind").textContent = `${contextLine(p)} · ${loc(p.genre)}`;
+  $("d-title").textContent = loc(p.title);
+  $("d-desc").textContent = loc(p.desc);
+  const hl = $("d-hl"); hl.innerHTML = ""; loc(p.hl).forEach(x => { const li = el("li"); li.textContent = x; hl.append(li); });
+
+  const facts = $("d-facts"); facts.innerHTML = "";
+  const rows = [["fWhere", contextLine(p)]];
+  if (p.jamTheme) rows.push(["fTheme", loc(p.jamTheme)]);
+  if (p.plat.length) rows.push(["fPlat", p.plat.map(k => t("plat")[k]).join(", ")]);
+  rows.push(["fEngine", "Unity"]);
+  rows.push(["fMedia", [["video", "mVideo"], ["images", "mImages"], ["link", "mLink"]].filter(([k]) => p.media[k]).map(([, l]) => t(l)).join(", ")]);
+  rows.forEach(([k, v]) => { const r = el("div", null, "<dt></dt><dd></dd>"); r.children[0].textContent = t(k); r.children[1].textContent = v; facts.append(r); });
+
+  const links = $("d-links"); links.innerHTML = "";
+  if (p.media.link) {
+    if (p.url) { const a = el("a", "btn", `<span></span>${ICON.link.replace('viewBox', 'width="14" height="14" viewBox')}`); a.href = p.url; a.target = "_blank"; a.rel = "noopener"; a.querySelector("span").textContent = storeName(p.url); links.append(a); }
+    else { const s = el("span", "btn off"); s.textContent = t("linkSoon"); links.append(s); }
+  }
+  if (p.restricted) { const n = el("p", "note"); n.textContent = loc(p.restricted); links.append(n); }
+
+  const items = [];
+  if (p.media.video) items.push({ kind: "video" });
+  if (p.images.length) p.images.forEach(src => items.push({ kind: "img", src }));
+  else if (p.media.images) items.push({ kind: "img" }, { kind: "img" }, { kind: "img" });
+  const stage = $("d-stage"), thumbs = $("d-thumbs"); thumbs.innerHTML = "";
+  const show = (it, btn) => {
+    stage.innerHTML = "";
+    if (it.kind === "video") {
+      if (p.video) { const v = el("video"); Object.assign(v, { src: p.video, controls: true, preload: "none", playsInline: true }); if (p.images[0]) v.poster = LG(p.images[0]); stage.append(v); }
+      else { const ph = el("div", "ph-video", `<div><span class="play"><svg width="22" height="22" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 2l7 4-7 4z" fill="currentColor"/></svg></span><span class="label"></span></div>`); ph.querySelector(".label").textContent = t("videoSoon"); stage.append(ph); }
+    } else stage.append(it.src ? bigImg(it.src, loc(p.title)) : cover(p));
+    thumbs.querySelectorAll("button").forEach(b => b.removeAttribute("aria-current"));
+    btn && btn.setAttribute("aria-current", "true");
+  };
+  items.forEach((it, i) => {
+    const b = el("button"); b.type = "button";
+    b.setAttribute("aria-label", it.kind === "video" ? t("video") : `${loc(p.title)} ${i + 1}`);
+    if (it.kind === "video") b.append(el("span", "vt", t("video")));
+    else b.append(it.src ? img(SM(it.src), "") : cover(p, false));
+    b.addEventListener("click", () => show(it, b)); thumbs.append(b);
+  });
+  thumbs.hidden = items.length < 2;
+  show(items[0] || { kind: "img" }, thumbs.firstChild);
+
+  if (!detail.open) { detail.showModal(); document.body.style.overflow = "hidden"; }
+  if (!keep) detail.scrollTop = 0;
+}
+function step(dir) { const i = PROJECTS.indexOf(current); location.hash = PROJECTS[(i + dir + PROJECTS.length) % PROJECTS.length].id; }
+function fromHash() {
+  const p = PROJECTS.find(x => x.id === location.hash.slice(1));
+  if (p) openProject(p); else if (detail.open) detail.close();
+}
+$("d-close").addEventListener("click", () => detail.close());
+$("d-prev").addEventListener("click", () => step(-1));
+$("d-next").addEventListener("click", () => step(1));
+detail.addEventListener("keydown", e => {
+  if (e.target.tagName === "VIDEO") return;
+  if (e.key === "ArrowRight") step(1); if (e.key === "ArrowLeft") step(-1);
+});
+detail.addEventListener("close", () => {
+  document.body.style.overflow = "";
+  $("d-stage").querySelectorAll("video").forEach(v => v.pause());
+  const back = current ? current.group : "";
+  current = null;
+  if (PROJECTS.some(x => "#" + x.id === location.hash)) {
+    history.replaceState(null, "", location.pathname + location.search + (back ? "#" + back : ""));
+    const s = back && document.getElementById(back); if (s) s.scrollIntoView({ block: "start" });
+  }
+});
+addEventListener("hashchange", fromHash);
+
+const nav = $("nav");
+addEventListener("scroll", () => nav.classList.toggle("scrolled", scrollY > 8), { passive: true });
+$("yr").textContent = new Date().getFullYear();
+applyLang();
+fromHash();
+</script>
+</body>
+</html>
